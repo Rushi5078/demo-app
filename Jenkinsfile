@@ -7,15 +7,16 @@ pipeline {
                 sh 'docker-compose build'
             }
         }
+
         stage('Deploy') {
             steps {
-                // Stop containers and remove volumes so DB resets
+                // Stop containers and clear volume for fresh DB init
                 sh 'docker-compose down -v'
-                
+
                 // Start containers in detached mode
                 sh 'docker-compose up -d'
-                
-                // Optional: wait for DB initialization
+
+                // Wait for containers to initialize
                 sh 'sleep 20'
             }
         }
