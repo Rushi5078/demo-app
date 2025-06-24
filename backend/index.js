@@ -13,14 +13,21 @@ const db = mysql.createConnection({
 });
 
 db.connect(err => {
-  if (err) throw err;
+  if (err) {
+    console.error('MySQL connection error:', err);
+    process.exit(1); // ← More graceful failure
+  }
   console.log('Connected to MySQL');
 });
 
 app.get('/employees', (req, res) => {
   db.query('SELECT * FROM employee', (err, result) => {
-    if (err) throw err;
-    res.json(result);
+    if (err) {
+      console.error('Query error:', err);
+      res.status(500).json({ error: 'Database error' });
+    } else {
+      res.json(result);
+    }
   });
 });
 
